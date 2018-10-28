@@ -2,18 +2,34 @@ import React from 'react';
 import {
     View,
     Text,
+    TouchableOpacity,
+    StyleSheet
 } from 'react-native';
-import styles from './styles';
+import globalStyles from '../../styles/styles';
 import moment from 'moment';
 import { connect } from 'react-redux';
-
 import { ScreenHeader } from '../../components/headers';
-
 import { AuthActions } from '../../store/authActions';
+import colors from '../../styles/colors';
+import utils from '../../utils';
+
+const RightElem = (props) => {
+    const onPress = () => {
+        props.navigation.navigate('AccountEdit', {...utils.extractCurrentRouteParams(props.navigation.state)});
+    };
+
+    return (
+        <TouchableOpacity onPress={onPress}>
+            <Text style={styles.rightElemText}>Edit</Text>
+        </TouchableOpacity>
+    );
+}
 
 class Account extends React.Component {
     static navigationOptions = {
-        header: props => <ScreenHeader headerProps={props} title='Account'/>
+        header: props => {
+            return <ScreenHeader headerProps={props} title='Account' rightElem={<RightElem {...props}/>}/>
+        }
     };
 
     constructor() {
@@ -35,12 +51,17 @@ class Account extends React.Component {
                     registrationDate: moment(resp.registrationDate).format('MMMM Do YYYY')
                 }
             );
+            this.props.navigation.setParams({
+                firstName: resp.firstName,
+                lastName: resp.lastName,
+                email: resp.email
+            })
         });
     }
 
     render() {
         return (
-            <View style={styles.container}>
+            <View style={globalStyles.container}>
                 <Text>Account Screen</Text>
                 <Text>Email: </Text>
                 <Text>{this.state.email}</Text>
@@ -59,7 +80,12 @@ class Account extends React.Component {
 }
 
 export default connect(state => {
-    return {
-        tkn: state.authReducer.tkn
-    }
+    return {}
 })(Account);
+
+const styles = StyleSheet.create({
+    rightElemText: {
+        ...globalStyles.defaultFont,
+        color: colors.lightGreen
+    }
+});

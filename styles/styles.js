@@ -1,13 +1,23 @@
-import {StatusBar} from 'react-native';
+import { StatusBar } from 'react-native';
 import colors from './colors';
+
+const defaultContainerPadding = 15;
+const defaultFont = {
+    fontSize: 16,
+    color: colors.darkBrown
+};
 
 export default styles = {
     statusBarHeight: StatusBar.currentHeight,
+
+    //font styles
+    defaultFont,
+
     container: {
         flex: 1,
         backgroundColor: colors.white,
-        paddingTop: StatusBar.currentHeight,
-        paddingHorizontal: 15
+        paddingTop: defaultContainerPadding,
+        paddingHorizontal: defaultContainerPadding
     },
     centeredHeader: {
         textAlign: 'center'
@@ -16,14 +26,18 @@ export default styles = {
         paddingTop: (StatusBar.currentHeight + 15),
         paddingBottom: 15,
         paddingHorizontal: 10,
-        backgroundColor: colors.darkBrown
+        backgroundColor: colors.darkGreen
     },
     screenHeaderTextStyles: {
+        ...defaultFont,
         color: colors.lightGreen
     },
     homeHeaderStyles: {
         paddingTop: (StatusBar.currentHeight + 15),
         paddingBottom: 15,
         paddingHorizontal: 10
+    },
+    headerDefaultMenuText: {
+        color: colors.gray
     }
 }

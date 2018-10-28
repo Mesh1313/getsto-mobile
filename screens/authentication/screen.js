@@ -1,7 +1,9 @@
 import React from 'react';
 import {
     View,
-    Text
+    Text,
+    TouchableOpacity,
+    StyleSheet
 } from 'react-native';
 import { connect } from 'react-redux';
 import globalStyles from '../../styles/styles';
@@ -32,7 +34,14 @@ class Authentication extends React.Component {
             });
     }
     onLogin () {
-
+        AuthActions.login(this.state)
+            .then(res => {
+                this.props.onLoginSuccess(res.token);
+                AuthActions.saveTknAsync(res.token);
+            })
+            .catch(err => {
+                console.log('Error while register: ', err);
+            });
     }
     toggleAuthMethod () {
         this.setState({isSignUp: !this.state.isSignUp});
@@ -40,24 +49,28 @@ class Authentication extends React.Component {
 
     render() {
         return (
-            <Container style={globalStyles.container}>
-                <View>
+            <View style={styles.container}>
+                <View style={styles.header}>
                     {this.state.isSignUp ?
-                        <Text style={globalStyles.centeredHeader}>Создать аккаунт</Text> :
-                        <Text style={globalStyles.centeredHeader}>Войти</Text>
+                        <Text style={styles.headerText}>Создать аккаунт</Text> :
+                        <Text style={styles.headerText}>Войти</Text>
                     }
+                </View>
+                <Container style={globalStyles.container}>
                     <Form>
-                        <Item stackedLabel>
-                            <Label>Имеил</Label>
+                        <Item stackedLabel style={styles.inputHolder}>
+                            <Label style={styles.label}>Имеил</Label>
                             <Input
+                                style={styles.input}
                                 autoCorrect={false}
                                 value={this.state.email}
                                 onChangeText={(text) => { this.setState({email: text}) }}
                             />
                         </Item>
-                        <Item stackedLabel>
-                            <Label>Пароль</Label>
+                        <Item stackedLabel style={styles.inputHolder}>
+                            <Label style={styles.label}>Пароль</Label>
                             <Input
+                                style={styles.input}
                                 secureTextEntry={true}
                                 value={this.state.password}
                                 onChangeText={(text) => { this.setState({password: text}) }}
@@ -65,28 +78,24 @@ class Authentication extends React.Component {
                         </Item>
                         <View>
                             <Button block
-                                    primary
-                                    style={{marginTop: 20}}
+                                    style={{marginTop: 20, backgroundColor: colors.gray}}
                                     onPress={this.state.isSignUp ? this.onRegister : this.onLogin}>
-                                {this.state.isSignUp ?
-                                    <Text style={{color: colors.white}}>Создать аккаунт</Text> :
-                                    <Text style={{color: colors.white}}>Войти</Text>
-                                }
+                                <Text style={{color: colors.white}}>{this.state.isSignUp ? "Создать аккаунт" : "Войти"}</Text>
                             </Button>
-                            <View
+                            <View 
                                 style={{
                                     alignItems: "center",
-                                    paddingTop: 10
-                                }}>
-                            {this.state.isSignUp ?
-                                <Text onPress={this.toggleAuthMethod}>Войти</Text> :
-                                <Text onPress={this.toggleAuthMethod}>Создать аккаунт</Text>
-                            }
+                                    paddingTop: 15
+                                }}
+                            >
+                                <TouchableOpacity onPress={this.toggleAuthMethod}>
+                                    <Text style={globalStyles.defaultFont}>{this.state.isSignUp ? "Войти" : "Создать аккаунт" }</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </Form>
-                </View>
-            </Container>
+                </Container>
+            </View>
         );
     }
 }
@@ -94,5 +103,33 @@ class Authentication extends React.Component {
 export default connect(null, dispatch => ({
     onRegisterSuccess: (tkn) => {
         dispatch({type: AuthActionTypes.REGISTRATION_SUCCESS, payload: tkn});
+    },
+    onLoginSuccess: (tkn) => {
+        dispatch({type: AuthActionTypes.LOGIN_SUCCESS, payload: tkn});
     }
-}))(Authentication)
+}))(Authentication);
+
+const styles = StyleSheet.create({
+    container: {
+        paddingTop: globalStyles.statusBarHeight,
+        flex: 1
+    },
+    header: {
+        backgroundColor: colors.darkGreen,
+        padding: 15
+    },
+    headerText: {
+        ...globalStyles.centeredHeader,
+        color: colors.lightGreen
+    },
+    inputHolder: {
+        borderColor: colors.darkBrown,
+        marginLeft: 0
+    },
+    input: {
+        ...globalStyles.defaultFont
+    },
+    label: {
+        ...globalStyles.defaultFont
+    }
+});

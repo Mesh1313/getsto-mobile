@@ -15,6 +15,10 @@ export default reducer = (state = initialState, action) => {
             return {
                 tkn: action.payload
             };
+        case AuthActionTypes.LOGOUT_SUCCESS:
+            return {
+                tkn: null
+            }
         case AuthActionTypes.GET_TOKEN_FROM_STORAGE:
             return {
                 isGettingToken: true
