@@ -9,13 +9,13 @@ import globalStyles from '../../styles/styles';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { ScreenHeader } from '../../components/headers';
-import { AuthActions } from '../../store/authActions';
+import { AccountActions } from '../../store/accountActions';
 import colors from '../../styles/colors';
 import utils from '../../utils';
 
 const RightElem = (props) => {
     const onPress = () => {
-        props.navigation.navigate('AccountEdit', {...utils.extractCurrentRouteParams(props.navigation.state)});
+        props.navigation.navigate('AccountEdit');
     };
 
     return (
@@ -32,55 +32,46 @@ class Account extends React.Component {
         }
     };
 
-    constructor() {
+    constructor(props) {
         super();
-
-        this.state = ({
-            firstName: '',
-            lastName: '',
-            email: '',
-            registrationDate: ''
-        });
     }
 
     componentWillMount() {
-        AuthActions.getUserData().then(resp => {
-            this.setState(
-                {
-                    ...resp,
-                    registrationDate: moment(resp.registrationDate).format('MMMM Do YYYY')
-                }
-            );
-            this.props.navigation.setParams({
-                firstName: resp.firstName,
-                lastName: resp.lastName,
-                email: resp.email
-            })
-        });
+        this.props.dispatch(AccountActions.getUserData());
     }
 
     render() {
-        return (
+        const {accountData} = this.props;
+
+        return accountData ? (
             <View style={globalStyles.container}>
-                <Text>Account Screen</Text>
+                <Text>Имя: </Text>
+                <Text>{accountData.firstName}</Text>
+
+                <Text>Фамилия: </Text>
+                <Text>{accountData.lastName}</Text>
+
                 <Text>Email: </Text>
-                <Text>{this.state.email}</Text>
+                <Text>{accountData.email}</Text>
 
-                <Text>First Name: </Text>
-                <Text>{this.state.firstName}</Text>
-
-                <Text>Last Name: </Text>
-                <Text>{this.state.lastName}</Text>
+                <Text>Телефон: </Text>
+                <Text>{accountData.phone}</Text>
 
                 <Text>Registration Date: </Text>
-                <Text>{this.state.registrationDate}</Text>
+                <Text>{moment(accountData.registrationDate).format('MMMM Do YYYY')}</Text>
+            </View>
+        ) : (
+            <View>
+                <Text style={globalStyles.centeredHeader}>Загрузка...</Text>
             </View>
         );
     }
 }
 
 export default connect(state => {
-    return {}
+    return {
+        accountData: state.accountReducer.accountData
+    }
 })(Account);
 
 const styles = StyleSheet.create({

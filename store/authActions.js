@@ -29,10 +29,6 @@ const logout = () => {
     return utils.getRequest({ path: 'accounts/logout' }).then(response => (response));
 }
 
-const getUserData = () => {
-    return utils.getRequest({ path: 'accounts/me' });
-}
-
 const saveTknAsync = async (token) => {
     return AsyncStorage.setItem('@stosstore:tkn', token);
 };
@@ -46,6 +42,5 @@ export const AuthActions = {
     login,
     logout,
     saveTknAsync,
-    getTknAsync,
-    getUserData
+    getTknAsync
 };

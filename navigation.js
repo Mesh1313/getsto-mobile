@@ -64,6 +64,9 @@ const DrawerNavigation = createDrawerNavigator(
         InitialRoutName: 'Authentication',
         drawerPosition: 'left',
         contentComponent: CustomDrawerContentComponent,
+        contentOptions: {
+            activeBackgroundColor: colors.gray
+        }
     }
 );
 

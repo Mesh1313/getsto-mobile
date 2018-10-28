@@ -6,11 +6,13 @@ import {
 import thunk from 'redux-thunk';
 import stoReducer from './stoReducer';
 import authReducer from './authReducer';
+import accountReducer from './accountReducer';
 
 import { AuthActions, AuthActionTypes } from '../store/authActions';
 
 const reducers = {
     authReducer,
+    accountReducer,
     stoReducer
 };
 

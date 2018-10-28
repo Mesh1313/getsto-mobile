@@ -13,6 +13,17 @@ export default styles = {
     //font styles
     defaultFont,
 
+    defaultLabel: {
+        ...defaultFont,
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 15,
+        paddingRight: 15,
+        color: colors.lightGreen
+    },
+    defaultLabelContainer: {
+        flex: 1
+    },
     container: {
         flex: 1,
         backgroundColor: colors.white,
